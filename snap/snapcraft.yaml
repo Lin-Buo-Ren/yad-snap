@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-# Snapcraft Recipe for [Project]
+# Snapcraft Recipe for Yet Another Dialog
 # ------------------------------
 # This file is in the YAML data serialization format:
 # http://yaml.org
@@ -16,62 +16,36 @@
 # For support refer to the snapcraft section in the Snapcraft Forum:
 # https://forum.snapcraft.io/c/snapcraft
 
-# All following comments, including this one, are designed to be stripped
-# before contributing the recipe to the upstream
-
-# my-awesome-app, my-app-name, my-app-command, my-app-launch, my-app-part
-# are placeholders text meant to be replaced by appropriate content
-
-name: my-awesome-app
-summary: Single-line elevator pitch for your amazing snap under 79 chars.
+name: yad
+summary: Display GTK+ dialog boxes from command line or shell scripts
 description: |
-  This is my-awesome-app's description. You have a paragraph or two to tell
-  the most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  Program allows you to display GTK+ dialog boxes from command line or shell scripts. YAD depends on GTK+ only. Minimal GTK+ version is 2.16.0
 
-# Version string just for humans, typically '1.2+git' or '1.3.2'
-# The wrapping single quotes are often required to avoid the version string
-# being accidentally interpreted as a YAML non-string(like '1', '1.2').
-# http://yaml.org/type
-# https://arp242.net/weblog/yaml_probably_not_so_great_after_all.html#surprising-behaviour
+  This software is licensed under the GPL v.3
+
+  Project homepage: https://sourceforge.net/projects/yad-dialog/
+  Example usage: https://sourceforge.net/p/yad-dialog/wiki/browse_pages/
+  Mailing list: http://groups.google.com/group/yad-common
+
+  THIS IS NOT AN OFFICIAL DISTRIBUTION!  For any issues regarding using this snap refer to the issue tracker:
+  https://github.com/Lin-Buo-Ren/yad-snap/issues
+
 version: determined-by-version-script
-
-# (OPTIONAL) The version string can also be dynamically determined via scripting
-# , in this case the value of the `version` key will be ignored (but the key is
-# still required).
-# NOTE: The resulting version string cannot be longer than 32 characters
 version-script: ./snap/local/utilities/set-snap-version.bash
-#version-script: git -C parts/my-app-part/src describe --always --dirty --tags
-
-# Security confinement
-# Use `devmode` to getting started
-# Flip to `strict` once you have the right plugs and slots,
-# or `classic` once you determine that strict confinement is not currently possible
-confinement: strict
-
-# Snap Grade
-# Use `devel` to getting started
-# Flip to `stable` once you determine that the snap is matured, only `stable` grade
-# snaps can be promoted to `candidate` and `stable` channels
-grade: stable
-
-# The path of icon to represent the snap, relative to the source tree directory
-# Only PNG or SVG image is supported, dimension must be greater than 256x256px
-icon: snap/gui/my-awesome-app.png
+confinement: devmode
+grade: devel
+icon: snap/gui/yad.png
 
 # Apps that are exposed by the snap package
 # If the _app_name_ is identical with the _snap_name_ it can be directly run
 # with `_snap_name_` or `snap run _snap_name_` commands, otherwise it can only be run
 # via `_snap_name_._app_name_` or `snap run _snap_name_._app_name_`
 apps:
-  my-app-name:
-    # The executable path relative to $SNAP to run the application, or a searchable
-    # command in the snap runtime's $PATH(not available in `classic` confinement)
-    command: bin/my-awesome-app-launch
-    # If the providing part of the app. has a desktop entry, specify its path relative to the `prime` directory.
-    # If the packaging target doesn't provide a desktop entry, ignore the `desktop` key and implement a desktop entry in `/snap/gui`
-    #desktop: share/applications/my-app-name.desktop
+  yad:
+    command: >
+      desktop-launch
+      yad-launch
+      yad
 
 # Refer the following documentation for asserting interface plugs and slots in a security confined snap:
 # Interfaces - doc - snapcraft.io
@@ -88,11 +62,6 @@ plugs:
   # Storage access
   #home:
   #removable-media: # Non-A/C
-
-  # Network access
-  #network:
-
-#slots:
 
 # Run `snapcraft help sources` for supported keywords on pulling a part's source ingredients
 # Run `snapcraft plugins` for supported build helper plugins
@@ -115,28 +84,14 @@ parts:
   # Refer: https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml
   desktop-gtk3: # for yad
 
-  # Optional auxiliary part for displaying simple dialogs for better user experience, powered by the Yet Another Dialog
   yad:
-    plugin: nil
-    stage-packages:
-    - yad
-
-  my-app-part:
     after:
     - assets # for /snap/local/utilities/patch-desktop-entries
 
-    #source:
-    #source-type:
-    #source-tag:
-    #source-depth:
+    source: https://github.com/v1cont/yad.git
+    source-depth: 1
+
+    # For stable release build
+    #source-tag: v0.40.3
 
     plugin: nil
-
-    override-stage: |
-      set \
-        -o errexit \
-        -o nounset
-
-      snapcraftctl stage
-
-      utilities/patch-desktop-entries.bash

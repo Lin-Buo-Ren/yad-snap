@@ -4,10 +4,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=My Awesome App
-Comment=The demonstration application of Snapcrafters Template Plus
-Exec=my-awesome-app.my-app-name
-Icon=${SNAP}/meta/gui/my-awesome-app.png
-# If my-app-name has its own icon
-#Icon=${SNAP}/meta/gui/my-app-name.png
+Name=Yet Another Dialog
+Comment=Program allows you to display GTK+ dialog boxes from command line or shell scripts
+Exec=yad
+Icon=${SNAP}/meta/gui/yad.png
 Categories=Development
