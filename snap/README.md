@@ -3,7 +3,7 @@
 	Use the RawGit service for easy access to in-repo pictures:
 	https://rawgit.com
 -->
-![Icon of Yet Another Dialog](snap/gui/yad.png "Icon of Yet Another Dialog")
+![Icon of Yet Another Dialog](https://cdn.rawgit.com/Lin-Buo-Ren/yad-snap/e6e7a876/snap/gui/yad.png "Icon of Yet Another Dialog")
 
 **This is the unofficial snap for Yet Another Dialog**, *"Program allows you to display GTK+ dialog boxes from command line or shell scripts"*. It works on Ubuntu, Fedora, Debian, and other major Linux distributions.
 
