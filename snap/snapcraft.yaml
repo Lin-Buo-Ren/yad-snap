@@ -1,4 +1,4 @@
-%YAML 1.2
+%YAML 1.1
 ---
 # Snapcraft Recipe for Yet Another Dialog
 # ------------------------------
@@ -83,10 +83,428 @@ parts:
   # Remote part for support of various desktop technologies
   # Refer: https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml
   desktop-gtk3: # for yad
+    after:
+    - ccache
+
+  # This remote part if included in the snap will generate 'parts_meta_info' file in the snaps root directory containing information about the revisions used in each part of the snap.
+  parts-meta-info:
+
+  # The glib library, required by gtk3 part, shipped by Ubuntu 16.04 is too old(2.48.2), replace it with a new release from upstream
+  glib:
+    after:
+    - ccache
+
+    source: https://gitlab.gnome.org/GNOME/glib.git
+    source-tag: 2.58.1
+    source-depth: 1
+    plugin: autotools
+    build-packages:
+    - autoconf
+    - build-essential
+    - gtk-doc-tools
+    - libmount-dev
+    filesets:
+      bash-completion:
+      - share/bash-completion
+      gdb-support:
+      - share/gdb
+      gettext-support:
+      - share/gettext
+      glib-2.0:
+      - share/glib-2.0
+      executables:
+      - bin
+      library-headers:
+      - include
+      - lib/glib-2.0/include
+      library-libtool:
+      - lib/*.la
+      library-pkgconfig:
+      - lib/pkgconfig
+      library-shared:
+      - lib/*.so*
+      localization:
+      - share/locale
+      m4-macros:
+      - share/aclocal/*.m4
+    stage:
+    - $executables
+    - $glib-2.0
+    - $library-headers
+    - $library-pkgconfig
+    - $library-shared
+    - $localization
+    - $m4-macros
+    prime:
+    - $library-shared
+    - $localization
+
+  # The pango library, required by gtk3 part, shipped by Ubuntu 16.04 is too old(1.38.1), replace it with a new release from upstream
+  pango:
+    after:
+    - ccache
+    - glib
+    - harfbuzz
+
+    source: https://gitlab.gnome.org/GNOME/pango.git
+    source-tag: 1.42.4
+    source-depth: 1
+    plugin: autotools
+    build-packages:
+    - autoconf
+    - build-essential
+    - gtk-doc-tools
+    - libfribidi-dev
+    # Replaced by harfbuzz part
+    # libharfbuzz-dev
+    stage-packages:
+    - libfribidi0
+    - libxft2
+
+  # The harfbuzz library, required by pango part, shipped by Ubuntu 16.04 is too old(1.0.1), replace it with a new release from upstream
+  harfbuzz:
+    after:
+    - ccache
+    - glib
+
+    source: git://anongit.freedesktop.org/harfbuzz
+    source-tag: 1.9.0
+    source-depth: 1
+
+    override-pull: |
+      set -o errexit
+
+      snapcraftctl pull
+
+      # Disable tests building
+      sed \
+        --in-place \
+        '/^SUBDIRS = /s/ test//' \
+        Makefile.am
+
+    plugin: autotools
+    build-packages:
+    - autoconf
+    - build-essential
+    - gtk-doc-tools
+    - libfreetype6-dev
+    # Replaced by glib part
+    #- libglib2.0-dev
+    - libcairo2-dev
+    - libtool
+    - ragel
+
+    filesets:
+      executables:
+      - bin
+      library-cmake:
+      - lib/cmake
+      library-headers:
+      - include
+      library-libtool:
+      - lib/*.la
+      library-shared:
+      - lib/*.so*
+      library-pkgconfig:
+      - lib/pkgconfig
+
+    stage:
+    - $library-cmake
+    - $library-headers
+    - $library-libtool
+    - $library-shared
+    - $library-pkgconfig
+
+    override-stage: |
+      set -o errexit -o xtrace
+
+      snapcraftctl stage
+
+      # Fix-up wrong libdir and includedir in pkgconfig
+      sed \
+        --in-place \
+        --expression='s#^libdir=#libdir=${prefix}#g' \
+        --expression='s#^includedir=#includedir=${prefix}#g' \
+        "${SNAPCRAFT_STAGE}"/lib/pkgconfig/harfbuzz*.pc
+
+    prime:
+    - $library-shared
+
+  # The meson build system shipped by Ubuntu 16.04 is too old(0.29.0), replace it with a new release from upstream
+  meson:
+    source: https://github.com/mesonbuild/meson.git
+    source-tag: 0.48.2
+    source-depth: 1
+    plugin: python
+    build-packages:
+    - python3-minimal
+    - ninja-build
+    prime:
+    - -*
+
+  # The epoxy library shipped by Ubuntu 16.04 is too old(1.3.1), replace it with a new release from upstream
+  epoxy:
+    after:
+    - ccache
+    - meson
+
+    source: https://github.com/anholt/libepoxy.git
+    source-tag: 1.5.2
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+    - --prefix
+    - /
+    - --libdir
+    - lib
+    - -Dtests=false
+    - -Dx11=true
+    build-packages:
+    - build-essential
+    - libegl1-mesa-dev
+    - libgl1-mesa-dev
+    - libgles2-mesa-dev
+    #organize:
+      # Workaround LP: #1796802 “PKG_CONFIG_PATH during build step should include multiarch paths” : Bugs : Snapcraft
+      #lib/*/pkgconfig/*: lib/pkgconfig/
+      #usr/local: /
+    #override-stage: |
+      #set -o errexit
+      #snapcraftctl stage
+
+      # Fix-up wrong prefix in pkgconfig
+      #sed \
+        #--in-place \
+        #'/^prefix=/s#/usr/local$##' \
+        #lib/pkgconfig/epoxy.pc
+
+  # The Gtk3 library shipped by Ubuntu 16.04 is too old(3.18.9), replace it with a new release from upstream
+  # https://developer.gnome.org/gtk3/stable/gtk-building.html#dependencies
+  gtk3:
+    after:
+    - ccache
+    - epoxy
+    - glib
+    - pango
+
+    source: https://gitlab.gnome.org/GNOME/gtk.git
+    source-tag: 3.24.1
+    source-depth: 1
+    plugin: autotools
+    configflags:
+    - --disable-dependency-tracking
+    - --disable-glibtest
+    - --disable-gtk-doc-html
+    # DISABLED: Not quite compatible with snapd for now
+    #- --enable-wayland-backend
+    - --enable-x11-backend
+    build-packages:
+    - autoconf
+    - build-essential
+    #- gtk-doc-tools
+    - libgirepository1.0-dev
+    # Replaced by epoxy part
+    #- libepoxy-dev
+    # Replaced by glib part
+    #- libglib2.0-dev
+    # Replaced by pango part
+    #- libpango1.0-dev
+    - libxml2-utils
+    - pkg-config
+    # DISABLED: Not quite compatible with snapd for now
+    # - wayland-protocols
+    filesets:
+      configurations:
+      - etc
+      desktop-entries:
+      - share/applications
+      executables:
+      - bin
+      icons:
+      - share/icons
+      library-headers:
+      - include
+      library-girepository:
+      - lib/girepository-1.0
+      library-libtool:
+      - lib/**.la*
+      library-pkgconfig:
+      - lib/pkgconfig
+      library-shared:
+      - lib/**.so*
+      localization:
+      - share/locale
+      manpages:
+      - share/man
+      m4-macros:
+      - share/aclocal/*.m4
+      support-gettext:
+      - share/gettext
+      support-gir:
+      - share/gir-*
+      support-glib:
+      - share/glib-*
+      support-gtk:
+      - share/gtk-*
+      themes:
+      - share/themes
+    override-stage: |
+      set -o errexit
+
+      snapcraftctl stage
+
+      # Fix-up missing library linking dependency:
+      # stage/lib/libgdk-3.so: undefined reference to `epoxy_has_glx'
+      sed \
+        --in-place \
+        --regexp-extended \
+        '/^Libs:/s/(-lgdk-3)/\1 -lepoxy/' \
+        lib/pkgconfig/gdk-3.0.pc
+
+      # stage/lib/libgtk-3.so: undefined reference to `hb_font_get_nominal_glyph'
+      sed \
+        --in-place \
+        --regexp-extended \
+        '/^Libs:/s/(-lgtk-3)/\1 -lharfbuzz/' \
+        lib/pkgconfig/gtk+-3.0.pc
+
+    prime:
+    - $library-shared
+    - $localization
+
+  # BuildingGtk – WebKit
+  # https://trac.webkit.org/wiki/BuildingGtk
+  #webkitgtk:
+    #after:
+    # ccache breaks when "[ 52%] Generate bindings (WebCoreBindings)"
+    # /usr/bin/ccache: invalid option -- 'E'
+    #- ccache
+    #- gcc-6
+
+    #source: https://webkitgtk.org/releases/webkitgtk-2.22.2.tar.xz
+    #plugin: cmake
+    # REPLACED: CC, CXX environment variable not customizable via this, wait for the incoming `build-environment` key support at snapcraft 3.0
+    #configflags:
+    #- -DPORT=GTK
+    #- -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+    # Refer to https://github.com/WebKit/webkit/blob/master/Tools/gtk/install-dependencies
+    #build-packages:
+    #- geoclue-2.0
+    #- gperf
+    #- libgcrypt20-dev
+    #- libgstreamer-plugins-base1.0-dev
+    #- libhyphen-dev
+    #- libjpeg-turbo8-dev
+    #- libnotify-dev
+    #- libsecret-1-dev
+    #- libsoup2.4-dev
+    #- libsqlite3-dev
+    ## DISABLED: Build without Web Crypto API(ENABLE_SUBTLE_CRYPTO) support
+    ##- libtasn1-6-dev
+    #- libwebp-dev
+    #- libxslt1-dev
+    #- libxt-dev
+    #- ruby-all-dev
+    #override-build: |
+      #set -eu
+
+      # According to https://github.com/snapcore/snapcraft/blob/42c7820/snapcraft/plugins/cmake.py#L68-L79 it seems that the cmake plugin doesn't copy the sourcetree to the builddir, imitate its behavior and use the srcdir directly
+      # ENABLE_PLUGIN_PROCESS_GTK2: We use Gtk3
+      # ENABLE_SUBTLE_CRYPTO: Requires newer libgcrypt version that is not available in Ubuntu 16.04, also the functionaility is not essential
+      # USE_GSTREAMER_GL: Requires Gstreamer 1.10 that is not available in Ubuntu 16.04
+      # USE_WOFF2: WOFF2Dec isn't available in Ubuntu 16.04
+      # Refer: cmake/OptionsGTK.cmake
+      #env \
+        #CC=/usr/bin/gcc-6 \
+        #CXX=/usr/bin/g++-6 \
+        #cmake \
+        #-D CMAKE_BUILD_TYPE=RelWithDebInfo \
+        #-D CMAKE_INSTALL_PREFIX= \
+        #-D ENABLE_SUBTLE_CRYPTO=false \
+        #-D ENABLE_PLUGIN_PROCESS_GTK2=false \
+        #-D ENABLE_WAYLAND_TARGET=false \
+        #-D USE_GSTREAMER_GL=false \
+        #-D USE_WOFF2=false \
+        #-D PORT=GTK \
+        #-G Ninja \
+        #"${SNAPCRAFT_PART_SRC}"
+
+      #env \
+        #DESTDIR="${SNAPCRAFT_PART_INSTALL}" \
+        #ninja -j "$(nproc)" install
+    #filesets:
+      #executables:
+      #- bin
+      #- libexec
+      #library-girepository:
+      #- lib/girepository-1.0
+      #library-headers:
+      #- include
+      #library-pkgconfig:
+      #- lib/pkgconfig
+      #library-shared:
+      #- lib/**.so*
+      #resource-gir:
+      #- share/gir-1.0
+      #resource-localization:
+      #- share/locale
+    #stage:
+    #- $executables
+    ##- $library-girepository
+    #- $library-headers
+    #- $library-pkgconfig
+    #- $library-shared
+    ##- $resource-gir
+    #- $resource-localization
+    #override-stage: |
+      #set -o errexit
+
+      #snapcraftctl stage
+
+      # Fix-up missing library linking dependency:
+      # stage/lib/libwebkit2gtk-4.0.so: undefined reference to `hb_ot_math_has_data'
+      #sed \
+        #--in-place \
+        #--regexp-extended \
+        #'/^Libs:/s/(-lwebkit2gtk-4.0)/\1 -lharfbuzz/' \
+        #lib/pkgconfig/webkit2gtk-4.0.pc
+
+    #prime:
+    #- $executables
+    #- $library-shared
+    #- $resource-localization
+
+  # This pseudo part setups Compiler cache(ccache) to the stage dir.
+  #
+  # To use it simply add a dependency to this part.
+  ccache:
+
+  # This pseudo part setups version 6 of GCC, which is not available
+  # in Ubuntu 16.04 software source.
+  # DISABLED: Depended by WebkitGtk, which is disabled for now.
+  #gcc-6:
+    #plugin: nil
+    #override-pull: 'true'
+    #override-build: |
+      #sudo apt --yes install software-properties-common
+      ## Install newer GCC from Toolchain test builds PPA
+      #sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+      #sudo apt update
+      #sudo apt --yes install cpp-6 gcc-6 g++-6
+    #filesets:
+      #executables:
+        #- bin/*
+    #stage:
+      #- $executables
+    #override-prime: 'true'
 
   yad:
     after:
-    - assets # for /snap/local/utilities/patch-desktop-entries
+    - ccache
+    - gtk3
+    # DISABLED: Refer https://github.com/Lin-Buo-Ren/yad-snap/issues/2 for more info
+    #- webkitgtk
 
     source: https://github.com/v1cont/yad.git
     source-depth: 1
@@ -94,4 +512,74 @@ parts:
     # For stable release build
     #source-tag: v0.40.3
 
-    plugin: nil
+    plugin: autotools
+    build-packages:
+    - intltool
+    # Replaced by gtk3 part
+    #- libgtk-3-dev
+    - libgtksourceview-3.0-dev
+    - libgtkspell3-3-dev
+    # REPLACED: Ubuntu build depends on wayland, which is not quite compatible with snapd for now
+    #- libwebkit2gtk-4.0-dev
+    stage-packages:
+    # Replaced by gtk3 part
+    #- libgtk-3-0
+    - libgtksourceview-3.0-1
+    - libgtkspell3-3-0
+    # REPLACED: Ubuntu build depends on wayland, which is not quite compatible with snapd for now
+    #- libwebkit2gtk-4.0-37
+    # For /etc/X11/rgb.txt
+    - x11-common
+    configflags:
+    - --enable-gio
+    #- --enable-html
+    - --enable-icon-browser
+    - --enable-spell
+    - --enable-sourceview
+    - --with-gtk=gtk3
+    - --with-rgb=/snap/yad/current/etc/X11/rgb.txt
+    override-build: |
+      set \
+        -o errexit
+
+      # Refer https://github.com/v1cont/yad#building-git-version
+      autoreconf -ivf
+      intltoolize
+
+      snapcraftctl build
+
+    filesets:
+      executables:
+      - bin
+      etc:
+      - etc
+      library-shared:
+      - lib/**.so*
+      resource-autoconf:
+      - share/aclocal
+      resource-desktop-entry:
+      - share/applications
+      resource-icons:
+      - share/icons
+      resource-localization:
+      - share/locale
+      resource-manpages:
+      - share/man
+      usr:
+      - usr
+    stage:
+    - $executables
+    - $library-shared
+    - $resource-desktop-entry
+    - $resource-icons
+    - $resource-localization
+    - $resource-manpages
+    - $usr
+    prime:
+    - $executables
+    - $library-shared
+    - $resource-desktop-entry
+    - $resource-icons
+    - $resource-localization
+    - $resource-manpages
+    - $usr
