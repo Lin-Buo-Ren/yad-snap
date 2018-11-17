@@ -16,7 +16,7 @@
 # For support refer to the snapcraft section in the Snapcraft Forum:
 # https://forum.snapcraft.io/c/snapcraft
 
-name: yad
+name: yad-brlin
 summary: Display GTK+ dialog boxes from command line or shell scripts
 description: |
   Program allows you to display GTK+ dialog boxes from command line or shell scripts. YAD depends on GTK+ only. Minimal GTK+ version is 2.16.0
@@ -537,7 +537,7 @@ parts:
     - --enable-spell
     - --enable-sourceview
     - --with-gtk=gtk3
-    - --with-rgb=/snap/yad/current/etc/X11/rgb.txt
+    - --with-rgb=/snap/$SNAPCRAFT_PROJECT_NAME/current/etc/X11/rgb.txt
     override-build: |
       set \
         -o errexit
