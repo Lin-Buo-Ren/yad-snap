@@ -11,9 +11,7 @@
 [![Build Status Badge of the `yad` Snap](https://build.snapcraft.io/badge/Lin-Buo-Ren/yad-snap.svg "Build Status of the `yad` snap")](https://build.snapcraft.io/user/Lin-Buo-Ren/yad-snap)
 -->
 
-<!-- Uncomment and modify this when you have a screenshot
-![Screenshot of the Snapped Application](screenshots/screenshot.png "Screenshot of the Snapped Application")
--->
+![Screenshot of the Snapped Application](local/screenshots/demo-text.png "Screenshot of the Snapped Application")
 
 Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters
 
