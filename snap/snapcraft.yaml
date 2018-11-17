@@ -216,7 +216,7 @@ parts:
     - $library-pkgconfig
 
     override-stage: |
-      set -o errexit -o xtrace
+      set -o errexit
 
       snapcraftctl stage
 
