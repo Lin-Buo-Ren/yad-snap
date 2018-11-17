@@ -297,6 +297,7 @@ parts:
     - --disable-gtk-doc-html
     # DISABLED: Not quite compatible with snapd for now
     #- --enable-wayland-backend
+    - --enable-broadway-backend
     - --enable-x11-backend
     build-packages:
     - autoconf
