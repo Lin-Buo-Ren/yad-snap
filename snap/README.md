@@ -7,48 +7,39 @@
 
 **This is the unofficial snap for Yet Another Dialog**, *"Program allows you to display GTK+ dialog boxes from command line or shell scripts"*. It works on Ubuntu, Fedora, Debian, and other major Linux distributions.
 
-<!-- Uncomment and modify this when you are provided a build status badge
-[![Build Status Badge of the `yad` Snap](https://build.snapcraft.io/badge/Lin-Buo-Ren/yad-snap.svg "Build Status of the `yad` snap")](https://build.snapcraft.io/user/Lin-Buo-Ren/yad-snap)
--->
+[![Build Status Badge of the `yad-brlin` Snap](https://build.snapcraft.io/badge/Lin-Buo-Ren/yad-snap.svg "Build Status of the `yad-brlin` snap")](https://build.snapcraft.io/user/Lin-Buo-Ren/yad-snap)
 
 ![Screenshot of the Snapped Application](local/screenshots/demo-text.png "Screenshot of the Snapped Application")
 
 Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters
 
-<!-- Uncomment and modify this when you have published the snap to the Snap Store
 ## Installation
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 
 ### In Terminal
     # Install Snap #
-    sudo snap install --channel=edge --devmode yad
-    #sudo snap install --channel=beta yad
-    #sudo snap install yad
-    
-    # Connect the Snap to Required Interfaces #
-    ## _plug_name_: Reasoning of connecting _plug_name_ ##
-    sudo snap connect yad:_plug_name_
-    
-    # Connect the Snap to Optional Interfaces #
-    ## _plug_name_: Reasoning of connecting _plug_name_ ##
-    sudo snap connect yad:_plug_name_
+    sudo snap install --channel=edge --devmode yad-brlin
+    #sudo snap install --channel=beta yad-brlin
+    #sudo snap install yad-brlin
+
+    # Launch the Application #
+    snap run yad-brlin.yad
+    snap run yad-brlin.yad-icon-browser
 
 ### The Graphical Way
-Browse <https://snapcraft.io/yad> and follow the instructions.
--->
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/yad-brlin)
 
-<!-- Uncomment when you have test results
 ## What is Working
-* [A list of functionallities that are verified working]
+* `--text`
+* `--title`
 
 ## What is NOT Working...yet 
-* [A list of functionallities that are verified not working]
+* HTML support is disabled for now
 
 Check out the [issue tracker](https://github.com/Lin-Buo-Ren/yad-snap/issues) for more known issues.
 
 ## What is NOT Tested...yet
-* [A list of functionallities that are not tested for any reasons.]
--->
+Anything not listed in "What is Working" and "What is NOT Working...yet" sections.
 
 ## Support
 * Report issues regarding using this snap to the issue tracker:  
