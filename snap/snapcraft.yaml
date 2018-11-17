@@ -46,6 +46,11 @@ apps:
       desktop-launch
       yad-launch
       yad
+  yad-icon-browser:
+    command: >
+      desktop-launch
+      yad-launch
+      yad-icon-browser
 
 # Refer the following documentation for asserting interface plugs and slots in a security confined snap:
 # Interfaces - doc - snapcraft.io
