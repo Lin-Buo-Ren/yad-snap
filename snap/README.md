@@ -31,6 +31,11 @@ Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.
 ## What is Working
 * `--text`
 * `--title`
+* `--form`
+* `--field`
+* `--button`
+* `--entry`
+* `--column`
 
 ## What is NOT Working...yet 
 * HTML support is disabled for now
