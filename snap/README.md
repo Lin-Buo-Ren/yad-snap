@@ -29,13 +29,13 @@ Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/yad-brlin)
 
 ## What is Working
+* `--button`
+* `--column`
+* `--entry`
+* `--field`
+* `--form`
 * `--text`
 * `--title`
-* `--form`
-* `--field`
-* `--button`
-* `--entry`
-* `--column`
 
 ## What is NOT Working...yet
 Check out the [issue tracker](https://github.com/Lin-Buo-Ren/yad-snap/issues) for known issues.
