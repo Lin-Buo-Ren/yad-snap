@@ -1,7 +1,7 @@
 # Unofficial Snap Packaging for Yet Another Dialog
 <!--
-	Use the RawGit service for easy access to in-repo pictures:
-	https://rawgit.com
+	Use the Staticaly service for easy access to in-repo pictures:
+	https://www.staticaly.com/
 -->
 ![Icon of Yet Another Dialog](https://cdn.rawgit.com/Lin-Buo-Ren/yad-snap/e6e7a876/snap/gui/yad.png "Icon of Yet Another Dialog")
 
