@@ -37,10 +37,8 @@ Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.
 * `--entry`
 * `--column`
 
-## What is NOT Working...yet 
-* HTML support is disabled for now
-
-Check out the [issue tracker](https://github.com/Lin-Buo-Ren/yad-snap/issues) for more known issues.
+## What is NOT Working...yet
+Check out the [issue tracker](https://github.com/Lin-Buo-Ren/yad-snap/issues) for known issues.
 
 ## What is NOT Tested...yet
 Anything not listed in "What is Working" and "What is NOT Working...yet" sections.
