@@ -18,8 +18,7 @@ Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.
 
 ### In Terminal
     # Install Snap #
-    sudo snap install --channel=edge --devmode yad-brlin
-    #sudo snap install --channel=beta yad-brlin
+    sudo snap install --channel=beta yad-brlin
     #sudo snap install yad-brlin
 
     # Launch the Application #
