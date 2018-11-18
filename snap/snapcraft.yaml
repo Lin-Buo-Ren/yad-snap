@@ -32,7 +32,7 @@ description: |
 
 version: determined-by-version-script
 version-script: ./snap/local/utilities/set-snap-version.bash
-confinement: devmode
+confinement: strict
 grade: devel
 icon: snap/gui/yad.png
 
