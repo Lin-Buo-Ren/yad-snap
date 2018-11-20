@@ -7,7 +7,7 @@
 
 **This is the unofficial snap for Yet Another Dialog**, *"Program allows you to display GTK+ dialog boxes from command line or shell scripts"*. It works on Ubuntu, Fedora, Debian, and other major Linux distributions.
 
-[![Build Status Badge of the `yad-brlin` Snap](https://build.snapcraft.io/badge/Lin-Buo-Ren/yad-snap.svg "Build Status of the `yad-brlin` snap")](https://build.snapcraft.io/user/Lin-Buo-Ren/yad-snap)
+[![Build Status Badge of the `yad` Snap](https://build.snapcraft.io/badge/Lin-Buo-Ren/yad-snap.svg "Build Status of the `yad` snap")](https://build.snapcraft.io/user/Lin-Buo-Ren/yad-snap)
 
 ![Screenshot of the Snapped Application](local/screenshots/demo-text.png "Screenshot of the Snapped Application")
 
@@ -18,15 +18,15 @@ Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.
 
 ### In Terminal
     # Install Snap #
-    sudo snap install --channel=beta yad-brlin
-    #sudo snap install yad-brlin
+    sudo snap install --channel=beta yad
+    #sudo snap install yad
 
     # Launch the Application #
-    snap run yad-brlin.yad
-    snap run yad-brlin.yad-icon-browser
+    snap run yad.yad
+    snap run yad.yad-icon-browser
 
 ### The Graphical Way
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/yad-brlin)
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/yad)
 
 ## What is Working
 * `--button`

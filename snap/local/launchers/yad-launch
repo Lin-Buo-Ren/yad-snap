@@ -7,13 +7,5 @@ set \
 	-o nounset \
 	-o pipefail
 
-yad \
-    --title 'Snap Obsoletion Notice' \
-    --text 'Hello.  This snap has been *obsoleted* due to the transformation to the upstream preferred namespace, it will no longer recieve updates.\nPlease remove this snap and install the `yad` snap instead, thank you!.'\
-    --center \
-    --text-align=center \
-    --button='Got it':0 \
-    --button-layout=center
-
 # Finally run the launching command
 exec "${@}"
